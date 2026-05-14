@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Wordpress - Little App</string>
+
+    //Theme
+    <string name="basic_theme">Basic Theme</string>
+    <string name="sec_theme">Sec Theme</string>
+
+    <string name="wordpress_app">Wordpress App</string>
+    <string name="favorites">Favorites</string>
+    <string name="progressdialog_title">Please wait...</string>
+    <string name="progressdialog_message">Loading...</string>
+    <string name="add_as_favorite">add</string>
 </resources>

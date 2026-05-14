@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/item"
+        android:layout_width="match_parent"
+        android:layout_height="45sp"
+        android:layout_margin="10sp"
+        android:visibility="visible"
+        app:cardCornerRadius="6sp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?background"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/favorites"
+                android:layout_width="25sp"
+                android:layout_height="25sp"
+                android:layout_gravity="left"
+                android:src="@drawable/ic_heart_selected"
+                android:visibility="visible"
+                app:tint="@color/white" />
+
+            <TextView
+                android:id="@+id/nameSpace"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </androidx.cardview.widget.CardView>
+
+</layout>
