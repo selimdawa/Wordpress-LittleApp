@@ -47,9 +47,8 @@ class WordpressFavoritesActivity : AppCompatActivity() {
         if (InternetConnection.checkInternetConnection(applicationContext)) {
             val api: WPApiService = WordPressClient.apiService
             val call: Call<List<Post?>?> = api.getPosts()!!
-            val progressDialog: ProgressDialog
 
-            progressDialog = ProgressDialog(context)
+            val progressDialog = ProgressDialog(context)
             progressDialog.setTitle(getString(R.string.progressdialog_title))
             progressDialog.setMessage(getString(R.string.progressdialog_message))
             if (withProgress) {
@@ -66,7 +65,7 @@ class WordpressFavoritesActivity : AppCompatActivity() {
                         for (dbPost in favPostList!!) {
                             if (dbPost != null) {
                                 if (post!!.id === dbPost.wpPostId) {
-                                    myList.add(post!!)
+                                    myList.add(post)
                                 }
                             }
                         }

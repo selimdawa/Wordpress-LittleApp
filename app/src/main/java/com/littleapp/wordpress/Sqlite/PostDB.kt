@@ -24,7 +24,6 @@ class PostDB(private val context: Context?) {
         override fun onCreate(db: SQLiteDatabase) {
             db.execSQL(SQL_CREATE_ENTRIES)
         }
-
         override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
     }
 
@@ -36,7 +35,7 @@ class PostDB(private val context: Context?) {
             val sqLiteDatabase: SQLiteDatabase = helper.readableDatabase
             val postList: ArrayList<Post> = ArrayList()
 
-            try {
+            sqLiteDatabase.use { sqLiteDatabase ->
                 val cursor: Cursor = sqLiteDatabase.query(
                     PostItem.TABLE_NAME,
                     arrayOf(
@@ -45,7 +44,7 @@ class PostDB(private val context: Context?) {
                     ),
                     null, null, null, null, null
                 )
-                try {
+                cursor.use { cursor ->
                     while (cursor.moveToNext()) {
                         val tmpPost = Post(
                             cursor.getInt(0), cursor.getInt(1),
@@ -54,11 +53,7 @@ class PostDB(private val context: Context?) {
                         )
                         postList.add(tmpPost)
                     }
-                } finally {
-                    cursor.close()
                 }
-            } finally {
-                sqLiteDatabase.close()
             }
             return postList
         }
@@ -69,7 +64,7 @@ class PostDB(private val context: Context?) {
         val postList: ArrayList<Post> = ArrayList()
         var isFavorite = false
 
-        try {
+        sqLiteDatabase.use { sqLiteDatabase ->
             val cursor: Cursor = sqLiteDatabase.query(
                 PostItem.TABLE_NAME,
                 arrayOf(
@@ -78,7 +73,7 @@ class PostDB(private val context: Context?) {
                 ),
                 null, null, null, null, null
             )
-            try {
+            cursor.use { cursor ->
                 while (cursor.moveToNext()) {
                     val tmpPost = Post(
                         cursor.getInt(0), cursor.getInt(1),
@@ -87,11 +82,7 @@ class PostDB(private val context: Context?) {
                     )
                     postList.add(tmpPost)
                 }
-            } finally {
-                cursor.close()
             }
-        } finally {
-            sqLiteDatabase.close()
         }
         for (post in postList) {
             if (post.wpPostId === postID) {
@@ -103,13 +94,11 @@ class PostDB(private val context: Context?) {
     }
 
     fun insert(wpPostID: Int, wpTitle: String?, wpExcerpt: String?, isFavorite: Boolean): Long {
-        //Data heraus holen aus der DB
         val helper = TodoItemDbHelper(context)
         val db: SQLiteDatabase = helper.readableDatabase
 
         return try {
             val values = ContentValues()
-            //Zuordnung spalten und values
             values.put(PostItem.COLNAME_POSTID, wpPostID)
             values.put(PostItem.COLNAME_TITLE, wpTitle)
             values.put(PostItem.COLNAME_EXCERPT, wpExcerpt)
@@ -124,18 +113,15 @@ class PostDB(private val context: Context?) {
         val helper = TodoItemDbHelper(context)
         val db: SQLiteDatabase = helper.writableDatabase
 
-        return try {
+        return db.use { db ->
             val values = ContentValues()
             values.put(PostItem.COLNAME_TITLE, post.wpTitle)
             values.put(PostItem.COLNAME_EXCERPT, post.wpExcerpt)
             values.put(PostItem.COLNAME_ISFAV, post.isFavorite)
 
-            //Ist die ID die ID aus dem Post Objekt
             val whereClause: String = BaseColumns._ID + " LIKE ?"
             val whereArgs = arrayOf<String>(java.lang.String.valueOf(post.id))
             db.update(PostItem.TABLE_NAME, values, whereClause, whereArgs)
-        } finally {
-            db.close()
         }
     }
 
@@ -143,12 +129,10 @@ class PostDB(private val context: Context?) {
         val helper = TodoItemDbHelper(context)
         val db: SQLiteDatabase = helper.writableDatabase
 
-        return try {
+        return db.use { db ->
             val whereClause = PostItem.COLNAME_POSTID + " LIKE ?"
             val whereArgs = arrayOf(postID.toString())
             db.delete(PostItem.TABLE_NAME, whereClause, whereArgs)
-        } finally {
-            db.close()
         }
     }
 
@@ -164,7 +148,6 @@ class PostDB(private val context: Context?) {
             return myInstance
         }
 
-        //String zum erstellen der DB
         private val SQL_CREATE_ENTRIES = "CREATE TABLE " + PostItem.TABLE_NAME + "(" +
                 BaseColumns._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 PostItem.COLNAME_POSTID + " INT," +
@@ -172,7 +155,6 @@ class PostDB(private val context: Context?) {
                 PostItem.COLNAME_EXCERPT + " TEXT," +
                 PostItem.COLNAME_ISFAV + " TINYINT(1)" + ")"
 
-        //String zum entfernen der DB
         private const val SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + PostItem.TABLE_NAME
     }
 }

@@ -60,6 +60,7 @@ class WordpressAdapter(private val context: Context, posts: List<Post>) :
                 currentPost!!.excerpt!!.get("rendered").toString().replace("\"", "")
             content = contentFilter(content, "<ins", "</ins>")
             content = videoFilter(content, "<iframe", "/iframe>")
+
             val intent: Intent =
                 WordpressDetailsActivity.createIntent(
                     v.context, currentPost!!.id,
@@ -74,13 +75,11 @@ class WordpressAdapter(private val context: Context, posts: List<Post>) :
         fun contentFilter(content: String, first: String?, last: String): String {
             val contentOutput: String
             val contentResult: String
-            //set index
             val firstIndex = content.indexOf(first!!)
             val lastIndex = content.lastIndexOf(last)
+
             if (firstIndex != -1 || lastIndex != -1) {
-                //get substring
                 contentOutput = content.substring(firstIndex, lastIndex + last.length)
-                //replace
                 contentResult = content.replace(contentOutput, "")
             } else {
                 contentResult = content
@@ -92,11 +91,10 @@ class WordpressAdapter(private val context: Context, posts: List<Post>) :
             val oldContentSubstring: String
             val newContentSubstring: String
             val contentResult: String
-            //set index
             val firstIndex = content.indexOf(first!!)
             val lastIndex = content.lastIndexOf(last)
+
             if (firstIndex != -1 || lastIndex != -1) {
-                //get substring
                 oldContentSubstring = content.substring(firstIndex, lastIndex + last.length)
                 newContentSubstring = "<div class=\"videoWrapper\">$oldContentSubstring</div>"
                 contentResult = content.replace(oldContentSubstring, newContentSubstring)

@@ -43,7 +43,6 @@ class WordpressDetailsActivity : AppCompatActivity() {
         val view = binding!!.root
         setContentView(view)
 
-        //Get Intent
         val id = intent.getSerializableExtra("postId") as Int
         val featuredMedia = intent.getSerializableExtra("featuredMedia") as Int
         val title: String = intent.getSerializableExtra("postTitle").toString()
@@ -53,7 +52,6 @@ class WordpressDetailsActivity : AppCompatActivity() {
         initToolbar(title, id)
         PageView.initWebView(contentPost, context, binding!!.content.webview)
 
-        //Call Media
         if (InternetConnection.checkInternetConnection(applicationContext)) {
             val api: WPApiService = WordPressClient.apiService
             val call: Call<Media?>? = api.getPostThumbnail(featuredMedia)
@@ -83,7 +81,6 @@ class WordpressDetailsActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        //Get Intent
         val id = intent.getSerializableExtra("postId") as Int
         val title: String = intent.getSerializableExtra("postTitle").toString()
         val excerpt: String = intent.getSerializableExtra("postExcerpt").toString()
@@ -91,7 +88,6 @@ class WordpressDetailsActivity : AppCompatActivity() {
             .replace("\\\\n".toRegex(), "").replace("\\\\r".toRegex(), "")
             .replace("\\\\".toRegex(), "")
 
-        //Toggle Navigation icon
         if (!isItemSelected) {
             item.icon = resources.getDrawable(R.drawable.ic_heart_selected, theme)
             isItemSelected = true
@@ -128,7 +124,6 @@ class WordpressDetailsActivity : AppCompatActivity() {
         binding!!.postToolbar.setNavigationOnClickListener { finish() }
     }
 
-    //Init CollapsingToolbarLayout
     private fun initCollapsingToolbar(title: String) {
         val collapsingToolbar: CollapsingToolbarLayout =
             findViewById<View>(R.id.post_collapsing_toolbarLayout) as CollapsingToolbarLayout

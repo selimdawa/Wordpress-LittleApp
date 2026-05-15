@@ -51,9 +51,8 @@ class MainActivity : AppCompatActivity() {
         if (InternetConnection.checkInternetConnection(applicationContext)) {
             val api: WPApiService = WordPressClient.apiService
             val call: Call<List<Post?>?> = api.getPosts()!!
-            val progressDialog: ProgressDialog
 
-            progressDialog = ProgressDialog(this)
+            val progressDialog = ProgressDialog(this)
             progressDialog.setTitle(getString(R.string.progressdialog_title))
             progressDialog.setMessage(getString(R.string.progressdialog_message))
             if (withProgress) {
