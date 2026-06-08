@@ -17,7 +17,7 @@ glide = "5.0.7"
 gson = "2.14.0"
 retrofit = "3.0.0"
 swiperefreshlayout = "1.2.0"
-ksp = "2.3.7"
+ksp = "2.3.8"
 
 [libraries]
 androidx-cardview = { module = "androidx.cardview:cardview", version.ref = "cardview" }
