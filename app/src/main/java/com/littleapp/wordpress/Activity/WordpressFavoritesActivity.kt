@@ -28,7 +28,7 @@ class WordpressFavoritesActivity : AppCompatActivity() {
     private var postList: List<Post?>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        THEME.setThemeOfApp(context)
+        //THEME.setThemeOfApp(context)
         super.onCreate(savedInstanceState)
         binding = ActivityWordpressFavoritesBinding.inflate(layoutInflater)
         val view = binding!!.root

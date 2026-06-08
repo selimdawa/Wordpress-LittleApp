@@ -19,7 +19,7 @@ class SplashActivity : AppCompatActivity() {
     var time_final = time_per_millis * time_per_second
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        THEME.setThemeOfApp(context)
+        //THEME.setThemeOfApp(context)
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
         val view = binding!!.root
