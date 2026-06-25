@@ -1,9 +1,10 @@
 package com.littleapp.wordpress.Activity
 
-import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.littleapp.wordpress.R
 import com.littleapp.wordpress.Unit.CLASS
@@ -22,68 +23,75 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
-    private var binding: ActivityMainBinding? = null
-    var context: Context = this@MainActivity
+    private lateinit var binding: ActivityMainBinding
+    private val context: Context = this
     private var postItemList: List<Post?>? = null
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        //THEME.setThemeOfApp(context)
+        THEME.setThemeOfApp(context)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding!!.root
-        setContentView(view)
+        setContentView(binding.root)
 
-        binding!!.toolbar.nameSpace.setText(R.string.wordpress_app)
-        binding!!.swipeRefresh.setOnRefreshListener {
-            binding!!.swipeRefresh.isRefreshing = true
-            Handler().postDelayed({
-                binding!!.swipeRefresh.isRefreshing = false
+        binding.toolbar.nameSpace.setText(R.string.wordpress_app)
+
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.swipeRefresh.isRefreshing = true
+            handler.postDelayed({
+                binding.swipeRefresh.isRefreshing = false
                 setListContent(false)
             }, 3000)
         }
-        binding!!.toolbar.favorites.setOnClickListener {
+
+        binding.toolbar.favorites.setOnClickListener {
             VOID.Intent1(context, CLASS.WORDPRESS_FAVORITES)
         }
+
         setListContent(true)
     }
 
     fun setListContent(withProgress: Boolean) {
         if (InternetConnection.checkInternetConnection(applicationContext)) {
             val api: WPApiService = WordPressClient.apiService
-            val call: Call<List<Post?>?> = api.getPosts()!!
+            val call: Call<List<Post?>?>? = api.getPosts()
 
-            val progressDialog = ProgressDialog(this)
-            progressDialog.setTitle(getString(R.string.progressdialog_title))
-            progressDialog.setMessage(getString(R.string.progressdialog_message))
+            if (call == null) {
+                binding.swipeRefresh.isRefreshing = false
+                return
+            }
+
             if (withProgress) {
-                progressDialog.show()
+                binding.progressBar.visibility = View.VISIBLE
             }
 
             call.enqueue(object : Callback<List<Post?>?> {
                 override fun onResponse(
                     call: Call<List<Post?>?>, response: Response<List<Post?>?>
                 ) {
-                    postItemList = response.body()
-                    //binding.recyclerView.setHasFixedSize(true);
-                    binding!!.recyclerView.adapter = WordpressAdapter(
-                        context,
-                        postItemList as List<Post>
-                    )
-                    if (withProgress) {
-                        progressDialog.dismiss()
+                    binding.progressBar.visibility = View.GONE
+                    val body = response.body()
+                    if (body != null) {
+                        postItemList = body
+                        val safeList = body.filterNotNull()
+                        binding.recyclerView.adapter = WordpressAdapter(context, safeList)
                     }
                 }
 
                 override fun onFailure(call: Call<List<Post?>?>, t: Throwable) {
-                    if (withProgress) {
-                        progressDialog.dismiss()
-                    }
+                    binding.progressBar.visibility = View.GONE
                 }
             })
         } else {
+            binding.swipeRefresh.isRefreshing = false
             Snackbar.make(
-                binding!!.swipeRefresh, "Can't connect to the Internet", Snackbar.LENGTH_INDEFINITE
+                binding.swipeRefresh, "Can't connect to the Internet", Snackbar.LENGTH_INDEFINITE
             ).show()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        handler.removeCallbacksAndMessages(null)
     }
 }

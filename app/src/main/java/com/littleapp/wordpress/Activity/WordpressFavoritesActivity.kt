@@ -1,6 +1,5 @@
 package com.littleapp.wordpress.Activity
 
-import android.app.ProgressDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.View
@@ -21,78 +20,74 @@ import retrofit2.Response
 
 class WordpressFavoritesActivity : AppCompatActivity() {
 
-    private var binding: ActivityWordpressFavoritesBinding? = null
-    var context: Context = this@WordpressFavoritesActivity
-    private var favPost: View? = null
+    private lateinit var binding: ActivityWordpressFavoritesBinding
+    private val context: Context = this
     private var sqLitePostList: List<Post?>? = null
     private var postList: List<Post?>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        //THEME.setThemeOfApp(context)
+        THEME.setThemeOfApp(context)
         super.onCreate(savedInstanceState)
         binding = ActivityWordpressFavoritesBinding.inflate(layoutInflater)
-        val view = binding!!.root
-        setContentView(view)
+        setContentView(binding.root)
 
-        favPost = binding!!.item
-        binding!!.toolbar.back.visibility = View.VISIBLE
-        binding!!.toolbar.back.setOnClickListener { onBackPressed() }
-        binding!!.toolbar.nameSpace.setText(R.string.favorites)
+        binding.toolbar.back.visibility = View.VISIBLE
+        binding.toolbar.back.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+        binding.toolbar.nameSpace.setText(R.string.favorites)
 
-        sqLitePostList = PostDB.getInstance(applicationContext)!!.allDbPosts
+        sqLitePostList = PostDB.getInstance(applicationContext)?.allDbPosts
         setFavListContent(true, sqLitePostList)
     }
 
     fun setFavListContent(withProgress: Boolean, favPostList: List<Post?>?) {
         if (InternetConnection.checkInternetConnection(applicationContext)) {
             val api: WPApiService = WordPressClient.apiService
-            val call: Call<List<Post?>?> = api.getPosts()!!
+            val call: Call<List<Post?>?>? = api.getPosts()
 
-            val progressDialog = ProgressDialog(context)
-            progressDialog.setTitle(getString(R.string.progressdialog_title))
-            progressDialog.setMessage(getString(R.string.progressdialog_message))
+            if (call == null) {
+                binding.progressBar.visibility = View.GONE
+                return
+            }
+
             if (withProgress) {
-                progressDialog.show()
+                binding.progressBar.visibility = View.VISIBLE
             }
 
             call.enqueue(object : Callback<List<Post?>?> {
                 override fun onResponse(
-                    call: Call<List<Post?>?>, response: Response<List<Post?>?>,
+                    call: Call<List<Post?>?>, response: Response<List<Post?>?>
                 ) {
-                    val myList: ArrayList<Post> = ArrayList()
+                    binding.progressBar.visibility = View.GONE
+                    val myList = ArrayList<Post>()
                     postList = response.body()
-                    for (post in postList!!) {
-                        for (dbPost in favPostList!!) {
-                            if (dbPost != null) {
-                                if (post!!.id === dbPost.wpPostId) {
-                                    myList.add(post)
-                                }
-                            }
+
+                    val networkPosts = postList?.filterNotNull().orEmpty()
+                    val favoriteDbMap = favPostList?.filterNotNull().orEmpty().associateBy { it.wpPostId }
+
+                    for (post in networkPosts) {
+                        if (favoriteDbMap.containsKey(post.id)) {
+                            myList.add(post)
                         }
                     }
-                    //binding.recyclerView.setHasFixedSize(true);
-                    binding!!.recyclerView.adapter =
-                        WordpressAdapter(applicationContext, myList)
-                    if (withProgress) {
-                        progressDialog.dismiss()
-                    }
+
+                    binding.recyclerView.adapter = WordpressAdapter(applicationContext, myList)
                 }
 
                 override fun onFailure(call: Call<List<Post?>?>, t: Throwable) {
-                    if (withProgress) {
-                        progressDialog.dismiss()
-                    }
+                    binding.progressBar.visibility = View.GONE
                 }
             })
         } else {
-            Snackbar.make(favPost!!, "Can't connect to the Internet", Snackbar.LENGTH_INDEFINITE)
-                .show()
+            binding.progressBar.visibility = View.GONE
+            Snackbar.make(binding.item, "Can't connect to the Internet", Snackbar.LENGTH_INDEFINITE).show()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        sqLitePostList = PostDB.getInstance(applicationContext)!!.allDbPosts
+        sqLitePostList = PostDB.getInstance(applicationContext)?.allDbPosts
         setFavListContent(true, sqLitePostList)
     }
 }
