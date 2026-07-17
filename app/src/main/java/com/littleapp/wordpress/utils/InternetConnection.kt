@@ -1,4 +1,4 @@
-package com.littleapp.wordpress.Util
+package com.littleapp.wordpress.utils
 
 import android.content.Context
 import android.net.ConnectivityManager

@@ -1,6 +1,5 @@
-package com.littleapp.wordpress.Model
+package com.littleapp.wordpress.model
 
-import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 
 data class Post(
@@ -8,16 +7,16 @@ data class Post(
     val id: Int = 0,
 
     @SerializedName("featured_media")
-    val featured_media: Int = 0,
+    val featuredMedia: Int = 0,
 
     @SerializedName("title")
-    val title: JsonObject? = null,
+    val title: Rendered? = null,
 
     @SerializedName("excerpt")
-    val excerpt: JsonObject? = null,
+    val excerpt: Rendered? = null,
 
     @SerializedName("content")
-    val content: JsonObject? = null,
+    val content: Rendered? = null,
 
     val sqLiteId: Int = 0,
     val wpPostId: Int = 0,

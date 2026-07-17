@@ -1,4 +1,4 @@
-package com.littleapp.wordpress.Util
+package com.littleapp.wordpress.utils
 
 import android.webkit.WebView
 import android.webkit.WebViewClient

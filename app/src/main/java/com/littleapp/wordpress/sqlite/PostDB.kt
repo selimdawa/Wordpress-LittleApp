@@ -1,12 +1,11 @@
-package com.littleapp.wordpress.Sqlite
+package com.littleapp.wordpress.sqlite
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
-import com.littleapp.wordpress.Model.Post
+import com.littleapp.wordpress.model.Post
 
 class PostDB private constructor(context: Context) {
 

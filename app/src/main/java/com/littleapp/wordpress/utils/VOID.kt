@@ -1,4 +1,4 @@
-package com.littleapp.wordpress.Unit
+package com.littleapp.wordpress.utils
 
 import android.content.Context
 import android.content.Intent

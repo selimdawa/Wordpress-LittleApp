@@ -1,4 +1,4 @@
-package com.littleapp.wordpress.Activity
+package com.littleapp.wordpress.activity
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,15 +12,15 @@ import androidx.core.view.WindowCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.android.material.snackbar.Snackbar
-import com.littleapp.wordpress.Model.Media
+import com.littleapp.wordpress.model.Media
 import com.littleapp.wordpress.R
-import com.littleapp.wordpress.Sqlite.PostDB
-import com.littleapp.wordpress.Unit.CLASS
-import com.littleapp.wordpress.Unit.THEME
-import com.littleapp.wordpress.Util.InternetConnection
-import com.littleapp.wordpress.Util.PageView
-import com.littleapp.wordpress.Util.WPApiService
-import com.littleapp.wordpress.Util.WordPressClient
+import com.littleapp.wordpress.sqlite.PostDB
+import com.littleapp.wordpress.utils.CLASS
+import com.littleapp.wordpress.utils.THEME
+import com.littleapp.wordpress.utils.InternetConnection
+import com.littleapp.wordpress.utils.PageView
+import com.littleapp.wordpress.utils.WPApiService
+import com.littleapp.wordpress.utils.WordPressClient
 import com.littleapp.wordpress.databinding.ActivityWordpressDetailsBinding
 import retrofit2.Call
 import retrofit2.Callback
@@ -59,7 +59,7 @@ class WordpressDetailsActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<Media?>, response: Response<Media?>) {
                     if (response.code() != 404) {
                         val media: Media? = response.body()
-                        val mediaUrl = media?.guid?.get("rendered").toString().replace("\"", "")
+                        val mediaUrl = media?.guid?.rendered.orEmpty()
 
                         Glide.with(applicationContext)
                             .load(mediaUrl)

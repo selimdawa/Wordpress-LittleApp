@@ -1,13 +1,13 @@
-package com.littleapp.wordpress.Activity
+package com.littleapp.wordpress.activity
 
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
-import com.littleapp.wordpress.Unit.CLASS
-import com.littleapp.wordpress.Unit.THEME
-import com.littleapp.wordpress.Unit.VOID
+import com.littleapp.wordpress.utils.CLASS
+import com.littleapp.wordpress.utils.THEME
+import com.littleapp.wordpress.utils.VOID
 import com.littleapp.wordpress.databinding.ActivitySplashBinding
 
 class SplashActivity : AppCompatActivity() {

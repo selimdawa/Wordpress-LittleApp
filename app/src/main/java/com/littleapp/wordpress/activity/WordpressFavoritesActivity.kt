@@ -1,17 +1,17 @@
-package com.littleapp.wordpress.Activity
+package com.littleapp.wordpress.activity
 
 import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.littleapp.wordpress.R
-import com.littleapp.wordpress.Unit.THEME
-import com.littleapp.wordpress.Adapter.WordpressAdapter
-import com.littleapp.wordpress.Model.Post
-import com.littleapp.wordpress.Sqlite.PostDB
-import com.littleapp.wordpress.Util.InternetConnection
-import com.littleapp.wordpress.Util.WPApiService
-import com.littleapp.wordpress.Util.WordPressClient
+import com.littleapp.wordpress.utils.THEME
+import com.littleapp.wordpress.adapter.WordpressAdapter
+import com.littleapp.wordpress.model.Post
+import com.littleapp.wordpress.sqlite.PostDB
+import com.littleapp.wordpress.utils.InternetConnection
+import com.littleapp.wordpress.utils.WPApiService
+import com.littleapp.wordpress.utils.WordPressClient
 import com.littleapp.wordpress.databinding.ActivityWordpressFavoritesBinding
 import com.google.android.material.snackbar.Snackbar
 import retrofit2.Call

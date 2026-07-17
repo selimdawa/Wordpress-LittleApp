@@ -1,6 +1,6 @@
-package com.littleapp.wordpress.Unit
+package com.littleapp.wordpress.utils
 
-import com.littleapp.wordpress.Activity.*
+import com.littleapp.wordpress.activity.*
 
 object CLASS {
     val MAIN: Class<*> = MainActivity::class.java

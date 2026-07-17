@@ -1,7 +1,7 @@
-package com.littleapp.wordpress.Util
+package com.littleapp.wordpress.utils
 
-import com.littleapp.wordpress.Model.Media
-import com.littleapp.wordpress.Model.Post
+import com.littleapp.wordpress.model.Media
+import com.littleapp.wordpress.model.Post
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

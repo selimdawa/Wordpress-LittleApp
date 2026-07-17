@@ -1,12 +1,12 @@
-package com.littleapp.wordpress.Adapter
+package com.littleapp.wordpress.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.littleapp.wordpress.Activity.WordpressDetailsActivity
-import com.littleapp.wordpress.Model.Post
+import com.littleapp.wordpress.activity.WordpressDetailsActivity
+import com.littleapp.wordpress.model.Post
 import com.littleapp.wordpress.databinding.ItemWordpressBinding
 
 class WordpressAdapter(
@@ -30,16 +30,16 @@ class WordpressAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(post: Post) {
-            val title = post.title?.get("rendered").toString().replace("\"", "")
-            val excerpt = post.excerpt?.get("rendered").toString().replace("\"", "")
+            val title = post.title?.rendered.orEmpty()
+            val excerpt = post.excerpt?.rendered.orEmpty()
 
             binding.title.text = HtmlCompat.fromHtml(title, HtmlCompat.FROM_HTML_MODE_LEGACY)
             binding.content.text = HtmlCompat.fromHtml(excerpt, HtmlCompat.FROM_HTML_MODE_LEGACY)
 
             itemView.setOnClickListener {
-                val cleanTitle = post.title?.get("rendered").toString().replace("\"", "")
-                var content = post.content?.get("rendered").toString().replace("\"", "")
-                val cleanExcerpt = post.excerpt?.get("rendered").toString().replace("\"", "")
+                val cleanTitle = post.title?.rendered.orEmpty()
+                var content = post.content?.rendered.orEmpty()
+                val cleanExcerpt = post.excerpt?.rendered.orEmpty()
 
                 content = contentFilter(content)
                 content = videoFilter(content)
@@ -49,7 +49,7 @@ class WordpressAdapter(
                 val intent = WordpressDetailsActivity.createIntent(
                     context,
                     post.id,
-                    post.featured_media,
+                    post.featuredMedia,
                     formattedTitle,
                     cleanExcerpt,
                     content
