@@ -39,7 +39,6 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.preference.ktx)           //Shared Preference
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -48,10 +47,9 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
     //Image
-    implementation(libs.glide)                          //Glide Image
+    implementation(libs.coil)                          //Coil Image
     //Other's
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation(libs.androidx.swiperefreshlayout)
-    implementation(libs.gson)
 }

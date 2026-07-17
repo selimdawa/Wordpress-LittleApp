@@ -9,8 +9,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
+import coil.load
 import com.google.android.material.snackbar.Snackbar
 import com.littleapp.wordpress.model.Media
 import com.littleapp.wordpress.R
@@ -61,14 +60,9 @@ class WordpressDetailsActivity : AppCompatActivity() {
                         val media: Media? = response.body()
                         val mediaUrl = media?.guid?.rendered.orEmpty()
 
-                        Glide.with(applicationContext)
-                            .load(mediaUrl)
-                            .thumbnail(
-                                Glide.with(applicationContext).load(mediaUrl).sizeMultiplier(0.5f)
-                            )
-                            .centerCrop()
-                            .diskCacheStrategy(DiskCacheStrategy.ALL)
-                            .into(binding.postBackdrop)
+                        binding.postBackdrop.load(mediaUrl) {
+                            crossfade(true)
+                        }
                     }
                 }
 
