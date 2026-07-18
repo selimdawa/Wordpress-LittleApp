@@ -1,15 +1,14 @@
 package com.littleapp.wordpress.activity
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.littleapp.wordpress.R
-import com.littleapp.wordpress.utils.THEME
+import com.littleapp.wordpress.utils.applyAppTheme
+import com.littleapp.wordpress.utils.isNetworkAvailable
 import com.littleapp.wordpress.adapter.WordpressAdapter
 import com.littleapp.wordpress.model.Post
 import com.littleapp.wordpress.sqlite.PostDB
-import com.littleapp.wordpress.utils.InternetConnection
 import com.littleapp.wordpress.utils.WPApiService
 import com.littleapp.wordpress.utils.WordPressClient
 import com.littleapp.wordpress.databinding.ActivityWordpressFavoritesBinding
@@ -21,12 +20,11 @@ import retrofit2.Response
 class WordpressFavoritesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWordpressFavoritesBinding
-    private val context: Context = this
     private var sqLitePostList: List<Post?>? = null
     private var postList: List<Post?>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        THEME.setThemeOfApp(context)
+        applyAppTheme()
         super.onCreate(savedInstanceState)
         binding = ActivityWordpressFavoritesBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -42,7 +40,7 @@ class WordpressFavoritesActivity : AppCompatActivity() {
     }
 
     fun setFavListContent(withProgress: Boolean, favPostList: List<Post?>?) {
-        if (InternetConnection.checkInternetConnection(applicationContext)) {
+        if (isNetworkAvailable()) {
             val api: WPApiService = WordPressClient.apiService
             val call: Call<List<Post?>?>? = api.getPosts()
 

@@ -5,9 +5,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
-import com.littleapp.wordpress.utils.CLASS
-import com.littleapp.wordpress.utils.THEME
-import com.littleapp.wordpress.utils.VOID
+import com.littleapp.wordpress.utils.applyAppTheme
+import com.littleapp.wordpress.utils.launchActivity
 import com.littleapp.wordpress.databinding.ActivitySplashBinding
 
 class SplashActivity : AppCompatActivity() {
@@ -19,7 +18,7 @@ class SplashActivity : AppCompatActivity() {
     private val timeFinal = TIME_PER_MILLIS * timePerSecond
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        THEME.setThemeOfApp(context)
+        applyAppTheme()
         super.onCreate(savedInstanceState)
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -28,7 +27,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun launch() {
-        VOID.Intent1(context, CLASS.MAIN)
+        context.launchActivity(MainActivity::class.java)
         finish()
     }
 

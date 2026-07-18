@@ -7,12 +7,11 @@ import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.littleapp.wordpress.R
-import com.littleapp.wordpress.utils.CLASS
-import com.littleapp.wordpress.utils.THEME
-import com.littleapp.wordpress.utils.VOID
+import com.littleapp.wordpress.utils.applyAppTheme
+import com.littleapp.wordpress.utils.isNetworkAvailable
+import com.littleapp.wordpress.utils.launchActivity
 import com.littleapp.wordpress.adapter.WordpressAdapter
 import com.littleapp.wordpress.model.Post
-import com.littleapp.wordpress.utils.InternetConnection
 import com.littleapp.wordpress.utils.WPApiService
 import com.littleapp.wordpress.utils.WordPressClient
 import com.google.android.material.snackbar.Snackbar
@@ -29,7 +28,7 @@ class MainActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        THEME.setThemeOfApp(context)
+        applyAppTheme()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -45,14 +44,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.toolbar.favorites.setOnClickListener {
-            VOID.Intent1(context, CLASS.WORDPRESS_FAVORITES)
+            context.launchActivity(WordpressFavoritesActivity::class.java)
         }
 
         setListContent(true)
     }
 
     fun setListContent(withProgress: Boolean) {
-        if (InternetConnection.checkInternetConnection(applicationContext)) {
+        if (isNetworkAvailable()) {
             val api: WPApiService = WordPressClient.apiService
             val call: Call<List<Post?>?>? = api.getPosts()
 

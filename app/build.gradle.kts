@@ -44,7 +44,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     //Layout
-    implementation(libs.androidx.constraintlayout)
     implementation(libs.material)
     //Image
     implementation(libs.coil)                          //Coil Image

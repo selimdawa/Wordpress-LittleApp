@@ -14,10 +14,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.littleapp.wordpress.model.Media
 import com.littleapp.wordpress.R
 import com.littleapp.wordpress.sqlite.PostDB
-import com.littleapp.wordpress.utils.CLASS
-import com.littleapp.wordpress.utils.THEME
-import com.littleapp.wordpress.utils.InternetConnection
-import com.littleapp.wordpress.utils.PageView
+import com.littleapp.wordpress.utils.applyAppTheme
+import com.littleapp.wordpress.utils.isNetworkAvailable
+import com.littleapp.wordpress.utils.loadWordPressContent
 import com.littleapp.wordpress.utils.WPApiService
 import com.littleapp.wordpress.utils.WordPressClient
 import com.littleapp.wordpress.databinding.ActivityWordpressDetailsBinding
@@ -32,7 +31,7 @@ class WordpressDetailsActivity : AppCompatActivity() {
     private var isItemSelected = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        THEME.setThemeOfApp(context)
+        applyAppTheme()
         super.onCreate(savedInstanceState)
         binding = ActivityWordpressDetailsBinding.inflate(layoutInflater)
 
@@ -48,9 +47,9 @@ class WordpressDetailsActivity : AppCompatActivity() {
             .replace("\\\\".toRegex(), "")
 
         initToolbar(title, id)
-        PageView.initWebView(contentPost, binding.content.webview)
+        binding.content.webview.loadWordPressContent(contentPost)
 
-        if (InternetConnection.checkInternetConnection(applicationContext)) {
+        if (isNetworkAvailable()) {
             val api: WPApiService = WordPressClient.apiService
             val call: Call<Media?>? = api.getPostThumbnail(featuredMedia)
 
@@ -125,7 +124,7 @@ class WordpressDetailsActivity : AppCompatActivity() {
             context: Context?, id: Int, featuredMedia: Int, title: String?,
             excerpt: String?, content: String?,
         ): Intent {
-            return Intent(context, CLASS.WORDPRESS_DETAILS).apply {
+            return Intent(context, WordpressDetailsActivity::class.java).apply {
                 putExtra("postId", id)
                 putExtra("featuredMedia", featuredMedia)
                 putExtra("postExcerpt", excerpt)
