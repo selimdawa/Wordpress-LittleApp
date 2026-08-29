@@ -2,7 +2,10 @@ package com.littleapp.wordpress.activity
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.littleapp.wordpress.R
 import com.littleapp.wordpress.utils.applyAppTheme
 import com.littleapp.wordpress.utils.isNetworkAvailable
@@ -25,9 +28,16 @@ class WordpressFavoritesActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         applyAppTheme()
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         binding = ActivityWordpressFavoritesBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         binding.toolbar.back.visibility = View.VISIBLE
         binding.toolbar.back.setOnClickListener {

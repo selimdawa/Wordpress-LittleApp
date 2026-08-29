@@ -5,7 +5,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.littleapp.wordpress.R
 import com.littleapp.wordpress.utils.applyAppTheme
 import com.littleapp.wordpress.utils.isNetworkAvailable
@@ -29,16 +32,22 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         applyAppTheme()
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         binding.toolbar.nameSpace.setText(R.string.wordpress_app)
 
-        binding.swipeRefresh.setOnRefreshListener {
-            binding.swipeRefresh.isRefreshing = true
+        binding.main.setOnRefreshListener {
+            binding.main.isRefreshing = true
             handler.postDelayed({
-                binding.swipeRefresh.isRefreshing = false
+                binding.main.isRefreshing = false
                 setListContent(false)
             }, 3000)
         }
@@ -56,7 +65,7 @@ class MainActivity : AppCompatActivity() {
             val call: Call<List<Post?>?>? = api.getPosts()
 
             if (call == null) {
-                binding.swipeRefresh.isRefreshing = false
+                binding.main.isRefreshing = false
                 return
             }
 
@@ -82,9 +91,9 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         } else {
-            binding.swipeRefresh.isRefreshing = false
+            binding.main.isRefreshing = false
             Snackbar.make(
-                binding.swipeRefresh, "Can't connect to the Internet", Snackbar.LENGTH_INDEFINITE
+                binding.main, "Can't connect to the Internet", Snackbar.LENGTH_INDEFINITE
             ).show()
         }
     }
