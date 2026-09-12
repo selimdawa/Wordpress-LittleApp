@@ -1,21 +1,21 @@
 package com.littleapp.wordpress.activity
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.android.material.snackbar.Snackbar
 import com.littleapp.wordpress.R
-import com.littleapp.wordpress.utils.applyAppTheme
-import com.littleapp.wordpress.utils.isNetworkAvailable
 import com.littleapp.wordpress.adapter.WordpressAdapter
+import com.littleapp.wordpress.databinding.ActivityWordpressFavoritesBinding
 import com.littleapp.wordpress.model.Post
 import com.littleapp.wordpress.sqlite.PostDB
 import com.littleapp.wordpress.utils.WPApiService
 import com.littleapp.wordpress.utils.WordPressClient
-import com.littleapp.wordpress.databinding.ActivityWordpressFavoritesBinding
-import com.google.android.material.snackbar.Snackbar
+import com.littleapp.wordpress.utils.isNetworkAvailable
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,17 +23,17 @@ import retrofit2.Response
 class WordpressFavoritesActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWordpressFavoritesBinding
+    private val context: Context = this
     private var sqLitePostList: List<Post?>? = null
     private var postList: List<Post?>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        applyAppTheme()
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         binding = ActivityWordpressFavoritesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
@@ -46,7 +46,7 @@ class WordpressFavoritesActivity : AppCompatActivity() {
         binding.toolbar.nameSpace.setText(R.string.favorites)
 
         sqLitePostList = PostDB.getInstance(applicationContext)?.allDbPosts
-        setFavListContent(true, sqLitePostList)
+        setFavListContent(withProgress = true, favPostList = sqLitePostList)
     }
 
     fun setFavListContent(withProgress: Boolean, favPostList: List<Post?>?) {
@@ -65,14 +65,16 @@ class WordpressFavoritesActivity : AppCompatActivity() {
 
             call.enqueue(object : Callback<List<Post?>?> {
                 override fun onResponse(
-                    call: Call<List<Post?>?>, response: Response<List<Post?>?>
+                    call: Call<List<Post?>?>,
+                    response: Response<List<Post?>?>,
                 ) {
                     binding.progressBar.visibility = View.GONE
                     val myList = ArrayList<Post>()
                     postList = response.body()
 
                     val networkPosts = postList?.filterNotNull().orEmpty()
-                    val favoriteDbMap = favPostList?.filterNotNull().orEmpty().associateBy { it.wpPostId }
+                    val favoriteDbMap =
+                        favPostList?.filterNotNull().orEmpty().associateBy { it.wpPostId }
 
                     for (post in networkPosts) {
                         if (favoriteDbMap.containsKey(post.id)) {
@@ -80,7 +82,7 @@ class WordpressFavoritesActivity : AppCompatActivity() {
                         }
                     }
 
-                    binding.recyclerView.adapter = WordpressAdapter(applicationContext, myList)
+                    binding.recyclerView.adapter = WordpressAdapter(context, myList)
                 }
 
                 override fun onFailure(call: Call<List<Post?>?>, t: Throwable) {
@@ -89,13 +91,14 @@ class WordpressFavoritesActivity : AppCompatActivity() {
             })
         } else {
             binding.progressBar.visibility = View.GONE
-            Snackbar.make(binding.item, "Can't connect to the Internet", Snackbar.LENGTH_INDEFINITE).show()
+            Snackbar.make(binding.main, R.string.connect_internet, Snackbar.LENGTH_INDEFINITE)
+                .show()
         }
     }
 
     override fun onResume() {
         super.onResume()
         sqLitePostList = PostDB.getInstance(applicationContext)?.allDbPosts
-        setFavListContent(true, sqLitePostList)
+        setFavListContent(withProgress = true, favPostList = sqLitePostList)
     }
 }

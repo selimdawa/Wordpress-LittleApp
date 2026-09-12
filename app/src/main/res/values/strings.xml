@@ -8,4 +8,6 @@
     <string name="wordpress_app">Wordpress App</string>
     <string name="favorites">Favorites</string>
     <string name="add_as_favorite">add</string>
+    <string name="textview">TextView</string>
+    <string name="connect_internet">Can\'t connect to the Internet</string>
 </resources>
