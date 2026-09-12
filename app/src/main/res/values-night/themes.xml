@@ -15,4 +15,9 @@
         <item name="colorError">@color/white</item>
         <item name="colorOnError">@color/dark</item>
     </style>
+
+    <style name="Theme.WpToAndroidApp" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+        <item name="colorOnBackground">@color/dark</item>
+        <item name="colorError">@color/white</item>
+    </style>
 </resources>

@@ -29,6 +29,8 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?trackColor</item>
+        <item name="colorOnBackground">@color/white</item>
+        <item name="colorError">@color/dark</item>
         <!-- Customize your theme here. -->
     </style>
 </resources>
